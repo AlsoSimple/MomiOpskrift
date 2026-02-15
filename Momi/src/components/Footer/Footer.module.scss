@@ -1,0 +1,43 @@
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  background-color: var(--bg-primary);
+  border-top: 1px solid var(--border-medium);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+
+.addButton {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background-color: #ffc845;
+  border: none;
+  color: #2d3436;
+  font-size: 3rem;
+  font-weight: 300;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  line-height: 1;
+  padding: 0;
+  box-shadow: 0 4px 12px rgba(255, 200, 69, 0.5);
+  
+  &:hover {
+    background-color: #ffb31a;
+    transform: scale(1.1);
+    box-shadow: 0 6px 16px rgba(255, 200, 69, 0.6);
+  }
+  
+  &:active {
+    transform: scale(0.95);
+    box-shadow: 0 2px 8px rgba(255, 200, 69, 0.4);
+  }
+}

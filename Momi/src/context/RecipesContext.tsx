@@ -1,0 +1,55 @@
+import { createContext, useContext } from 'react';
+import type { ReactNode } from 'react';
+import { useRecipeBooks } from './RecipeBooksContext';
+
+export interface Recipe {
+  id: string;
+  titel: string;
+  link: string;
+  kategori: string;
+  createdAt: number;
+}
+
+interface RecipesContextType {
+  recipes: Recipe[];
+  setRecipes: (value: Recipe[] | ((val: Recipe[]) => Recipe[])) => void;
+  addRecipe: (recipe: Omit<Recipe, 'id' | 'createdAt'>) => void;
+  deleteRecipe: (id: string) => void;
+}
+
+const RecipesContext = createContext<RecipesContextType | undefined>(undefined);
+
+export function RecipesProvider({ children }: { children: ReactNode }) {
+  const { activeBook, activeBookId, updateBook, addRecipeToBook, deleteRecipeFromBook } = useRecipeBooks();
+
+  const recipes = activeBook?.recipes || [];
+
+  const setRecipes = (value: Recipe[] | ((val: Recipe[]) => Recipe[])) => {
+    if (!activeBook) return;
+    
+    const newRecipes = typeof value === 'function' ? value(recipes) : value;
+    updateBook(activeBookId, { recipes: newRecipes });
+  };
+
+  const addRecipe = (recipe: Omit<Recipe, 'id' | 'createdAt'>) => {
+    addRecipeToBook(activeBookId, recipe);
+  };
+
+  const deleteRecipe = (id: string) => {
+    deleteRecipeFromBook(activeBookId, id);
+  };
+
+  return (
+    <RecipesContext.Provider value={{ recipes, setRecipes, addRecipe, deleteRecipe }}>
+      {children}
+    </RecipesContext.Provider>
+  );
+}
+
+export function useRecipes() {
+  const context = useContext(RecipesContext);
+  if (context === undefined) {
+    throw new Error('useRecipes must be used within a RecipesProvider');
+  }
+  return context;
+}
