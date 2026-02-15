@@ -1,7 +1,7 @@
 [build]
   base = "Momi"
   command = "npm run build"
-  publish = "Momi/dist"
+  publish = "dist"
 
 [[redirects]]
   from = "/*"
