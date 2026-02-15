@@ -54,7 +54,7 @@ export default function Share() {
     <div className={styles.container}>
       <h1>Del Opskriftsbog</h1>
       <p className={styles.description}>
-        Del din opskriftsbog "{activeBook.name}" med familie og venner via et link.
+        Send din opskriftsbog "{activeBook.name}" til familie og venner.
       </p>
 
       <div className={styles.stats}>
@@ -74,11 +74,11 @@ export default function Share() {
           onClick={generateShareLink}
           disabled={isGenerating || activeBook.recipes.length === 0}
         >
-          {isGenerating ? 'Opretter link...' : 'Opret Delingslink'}
+          {isGenerating ? 'Laver link...' : 'Lav Link'}
         </button>
       ) : (
         <div className={styles.linkSection}>
-          <p className={styles.success}>✓ Link oprettet!</p>
+          <p className={styles.success}>✓ Klar!</p>
           <div className={styles.linkBox}>
             <input 
               type="text" 
@@ -94,7 +94,7 @@ export default function Share() {
             </button>
           </div>
           <p className={styles.hint}>
-            Send dette link til andre via SMS, WhatsApp eller e-mail
+            Send linket via SMS, WhatsApp eller e-mail
           </p>
         </div>
       )}

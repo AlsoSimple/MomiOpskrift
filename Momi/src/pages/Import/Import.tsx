@@ -77,7 +77,7 @@ export default function Import() {
   if (isLoading) {
     return (
       <div className={styles.container}>
-        <div className={styles.loadingSpinner}>Henter opskriftsbog...</div>
+        <div className={styles.loadingSpinner}>Åbner delte opskrifter...</div>
       </div>
     );
   }
@@ -104,7 +104,7 @@ export default function Import() {
   return (
     <div className={styles.container}>
       <div className={styles.importBox}>
-        <h1>📚 Importer Opskriftsbog</h1>
+        <h1>📚 Modtag Opskrifter</h1>
         
         <div className={styles.bookPreview}>
           <div 
@@ -147,7 +147,7 @@ export default function Import() {
           onClick={handleImport}
           disabled={isImporting}
         >
-          {isImporting ? '✓ Importerer...' : 'Importer Opskriftsbog'}
+          {isImporting ? '✓ Gemmer...' : 'Gem i Mine Bøger'}
         </button>
 
         <button
@@ -158,7 +158,7 @@ export default function Import() {
         </button>
 
         <p className={styles.note}>
-          Dette opretter en ny opskriftsbog og bevarer dine eksisterende bøger.
+          Dette tilføjer en ny opskriftsbog. Dine andre bøger forbliver som de er.
         </p>
       </div>
     </div>
