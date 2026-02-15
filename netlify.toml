@@ -1,0 +1,9 @@
+[build]
+  base = "Momi"
+  command = "npm run build"
+  publish = "Momi/dist"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
