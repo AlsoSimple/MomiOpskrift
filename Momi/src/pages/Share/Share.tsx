@@ -1,18 +1,22 @@
 import { useState } from 'react';
+import { IoCheckmark } from 'react-icons/io5';
 import { useRecipeBooks } from '../../context/RecipeBooksContext';
+import { QRCodeSVG } from 'qrcode.react';
 import LZString from 'lz-string';
 import styles from './Share.module.scss';
 
 export default function Share() {
   const { activeBook } = useRecipeBooks();
   const [shareLink, setShareLink] = useState('');
+  const [shareMethod, setShareMethod] = useState<'qr' | 'link' | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const generateShareLink = () => {
+  const generateShareLink = (method: 'qr' | 'link') => {
     if (!activeBook) return;
     
     setIsGenerating(true);
+    setShareMethod(method);
     try {
       const data = {
         name: activeBook.name,
@@ -69,16 +73,41 @@ export default function Share() {
       </div>
 
       {!shareLink ? (
-        <button 
-          className={styles.generateButton}
-          onClick={generateShareLink}
-          disabled={isGenerating || activeBook.recipes.length === 0}
-        >
-          {isGenerating ? 'Laver link...' : 'Lav Link'}
-        </button>
+        <div className={styles.buttonGroup}>
+          <button 
+            className={styles.methodButton}
+            onClick={() => generateShareLink('qr')}
+            disabled={isGenerating || activeBook.recipes.length === 0}
+          >
+            {isGenerating && shareMethod === 'qr' ? 'Laver QR...' : 'QR Kode'}
+          </button>
+          <button 
+            className={styles.methodButton}
+            onClick={() => generateShareLink('link')}
+            disabled={isGenerating || activeBook.recipes.length === 0}
+          >
+            {isGenerating && shareMethod === 'link' ? 'Laver link...' : 'Del Link'}
+          </button>
+        </div>
+      ) : shareMethod === 'qr' ? (
+        <div className={styles.qrSection}>
+          <p className={styles.success}><IoCheckmark /> Klar!</p>
+          <div className={styles.qrBox}>
+            <QRCodeSVG value={shareLink} size={256} level="M" />
+          </div>
+          <p className={styles.hint}>
+            Scan QR-koden med telefonen
+          </p>
+          <button 
+            className={styles.backButton}
+            onClick={() => { setShareLink(''); setShareMethod(null); }}
+          >
+            Tilbage
+          </button>
+        </div>
       ) : (
         <div className={styles.linkSection}>
-          <p className={styles.success}>✓ Klar!</p>
+          <p className={styles.success}><IoCheckmark /> Klar!</p>
           <div className={styles.linkBox}>
             <input 
               type="text" 
@@ -90,12 +119,18 @@ export default function Share() {
               className={styles.copyButton}
               onClick={copyToClipboard}
             >
-              {copied ? '✓ Kopieret' : 'Kopiér'}
+              {copied ? <><IoCheckmark /> Kopieret</> : 'Kopiér'}
             </button>
           </div>
           <p className={styles.hint}>
             Send linket via SMS, WhatsApp eller e-mail
           </p>
+          <button 
+            className={styles.backButton}
+            onClick={() => { setShareLink(''); setShareMethod(null); }}
+          >
+            Tilbage
+          </button>
         </div>
       )}
 

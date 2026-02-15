@@ -14,13 +14,14 @@ interface RecipesContextType {
   recipes: Recipe[];
   setRecipes: (value: Recipe[] | ((val: Recipe[]) => Recipe[])) => void;
   addRecipe: (recipe: Omit<Recipe, 'id' | 'createdAt'>) => void;
+  updateRecipe: (id: string, updates: Partial<Recipe>) => void;
   deleteRecipe: (id: string) => void;
 }
 
 const RecipesContext = createContext<RecipesContextType | undefined>(undefined);
 
 export function RecipesProvider({ children }: { children: ReactNode }) {
-  const { activeBook, activeBookId, updateBook, addRecipeToBook, deleteRecipeFromBook } = useRecipeBooks();
+  const { activeBook, activeBookId, updateBook, addRecipeToBook, updateRecipeInBook, deleteRecipeFromBook } = useRecipeBooks();
 
   const recipes = activeBook?.recipes || [];
 
@@ -35,12 +36,16 @@ export function RecipesProvider({ children }: { children: ReactNode }) {
     addRecipeToBook(activeBookId, recipe);
   };
 
+  const updateRecipe = (id: string, updates: Partial<Recipe>) => {
+    updateRecipeInBook(activeBookId, id, updates);
+  };
+
   const deleteRecipe = (id: string) => {
     deleteRecipeFromBook(activeBookId, id);
   };
 
   return (
-    <RecipesContext.Provider value={{ recipes, setRecipes, addRecipe, deleteRecipe }}>
+    <RecipesContext.Provider value={{ recipes, setRecipes, addRecipe, updateRecipe, deleteRecipe }}>
       {children}
     </RecipesContext.Provider>
   );

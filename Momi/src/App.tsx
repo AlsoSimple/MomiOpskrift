@@ -24,6 +24,7 @@ function App() {
                 <Route path="kategorier" element={<Kategorier />} />
                 <Route path="kategorier/:category" element={<CategoryDetail />} />
                 <Route path="opret" element={<Create />} />
+                <Route path="opret/:id" element={<Create />} />
                 <Route path="del" element={<Share />} />
               </Route>
               <Route path="importer/:shareId" element={<Import />} />

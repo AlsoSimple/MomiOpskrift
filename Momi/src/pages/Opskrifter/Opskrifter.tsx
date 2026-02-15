@@ -1,8 +1,11 @@
+import { useNavigate } from 'react-router-dom';
+import { IoPencil, IoTrash } from 'react-icons/io5';
 import { useRecipes } from '../../context/RecipesContext';
 import styles from './Opskrifter.module.scss';
 
 export default function Opskrifter() {
-  const { recipes } = useRecipes();
+  const { recipes, deleteRecipe } = useRecipes();
+  const navigate = useNavigate();
   
   const sortedRecipes = [...recipes].sort((a, b) => 
     a.titel.toLowerCase().localeCompare(b.titel.toLowerCase())
@@ -21,6 +24,20 @@ export default function Opskrifter() {
   // Get sorted letters
   const letters = Object.keys(groupedRecipes).sort();
 
+  const handleDelete = (id: string, titel: string, e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (confirm(`Slet "${titel}"?`)) {
+      deleteRecipe(id);
+    }
+  };
+
+  const handleEdit = (id: string, e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    navigate(`/opret/${id}`);
+  };
+
   return (
     <div className={styles.container}>
       <h1>Opskrifter</h1>
@@ -33,16 +50,35 @@ export default function Opskrifter() {
             <div key={letter} className={styles.letterGroup}>
               <div className={styles.letterHeader}>{letter}</div>
               {groupedRecipes[letter].map((recipe) => (
-                <a 
-                  key={recipe.id} 
-                  href={recipe.link} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className={styles.recipeCard}
-                >
-                  <h2>{recipe.titel}</h2>
-                  <span className={styles.category}>{recipe.kategori}</span>
-                </a>
+                <div key={recipe.id} className={styles.recipeCard}>
+                  <div className={styles.recipeInfo}>
+                    <a 
+                      href={recipe.link} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className={styles.recipeLink}
+                    >
+                      <h2>{recipe.titel}</h2>
+                      <span className={styles.category}>{recipe.kategori}</span>
+                    </a>
+                  </div>
+                  <div className={styles.recipeActions}>
+                    <button 
+                      className={styles.editButton}
+                      onClick={(e) => handleEdit(recipe.id, e)}
+                      aria-label="Rediger opskrift"
+                    >
+                      <IoPencil />
+                    </button>
+                    <button 
+                      className={styles.deleteButton}
+                      onClick={(e) => handleDelete(recipe.id, recipe.titel, e)}
+                      aria-label="Slet opskrift"
+                    >
+                      <IoTrash />
+                    </button>
+                  </div>
+                </div>
               ))}
             </div>
           ))}

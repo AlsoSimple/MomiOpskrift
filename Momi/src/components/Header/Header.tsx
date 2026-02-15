@@ -10,6 +10,8 @@ export default function Header() {
   const location = useLocation();
   const navigate = useNavigate();
   const isCreatePage = location.pathname === '/opret';
+  const isSharePage = location.pathname === '/del';
+  const showBackButton = isCreatePage || isSharePage || location.pathname.startsWith('/opret/');
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -26,7 +28,7 @@ export default function Header() {
   return (
     <>
       <header className={styles.header}>
-        {isCreatePage ? (
+        {showBackButton ? (
           <button 
             className={styles.backButton}
             onClick={handleBack}
@@ -46,7 +48,7 @@ export default function Header() {
           </button>
         )}
         
-        <h1 className={styles.title}>Momi's Opskrifter</h1>
+        <h1 className={styles.title}>Momi</h1>
         
         <BookSwitcher />
       </header>

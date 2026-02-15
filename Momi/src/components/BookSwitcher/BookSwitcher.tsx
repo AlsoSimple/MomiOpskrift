@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useRecipeBooks } from '../../context/RecipeBooksContext';
 import styles from './BookSwitcher.module.scss';
 
+// Book switcher component
 export default function BookSwitcher() {
   const { books, activeBookId, activeBook, setActiveBookId, addBook, deleteBook } = useRecipeBooks();
   const [isOpen, setIsOpen] = useState(false);

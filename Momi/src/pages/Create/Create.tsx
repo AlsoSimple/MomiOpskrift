@@ -1,17 +1,32 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useCategories } from '../../context/CategoriesContext';
 import { useRecipes } from '../../context/RecipesContext';
 import styles from './Create.module.scss';
 
 export default function Create() {
+  const { id } = useParams<{ id: string }>();
   const [titel, setTitel] = useState('');
   const [link, setLink] = useState('');
   const [kategori, setKategori] = useState('');
   const [selectedOption, setSelectedOption] = useState('');
   const { categories, addCategory } = useCategories();
-  const { addRecipe } = useRecipes();
+  const { recipes, addRecipe, updateRecipe } = useRecipes();
   const navigate = useNavigate();
+  
+  const isEditing = !!id;
+
+  // Load recipe data when editing
+  useEffect(() => {
+    if (isEditing) {
+      const recipe = recipes.find(r => r.id === id);
+      if (recipe) {
+        setTitel(recipe.titel);
+        setLink(recipe.link);
+        setSelectedOption(recipe.kategori);
+      }
+    }
+  }, [id, isEditing, recipes]);
 
   // Add new category when user types in "Ny kategori" field and presses Enter or loses focus
   const handleAddCategory = () => {
@@ -31,18 +46,26 @@ export default function Create() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (titel.trim() && link.trim() && selectedOption) {
-      addRecipe({
-        titel: titel.trim(),
-        link: link.trim(),
-        kategori: selectedOption,
-      });
+      if (isEditing && id) {
+        updateRecipe(id, {
+          titel: titel.trim(),
+          link: link.trim(),
+          kategori: selectedOption,
+        });
+      } else {
+        addRecipe({
+          titel: titel.trim(),
+          link: link.trim(),
+          kategori: selectedOption,
+        });
+      }
       navigate('/');
     }
   };
 
   return (
     <div className={styles.container}>
-      <h1>Opret Opskrift</h1>
+      <h1>{isEditing ? 'Rediger Opskrift' : 'Opret Opskrift'}</h1>
       
       <form className={styles.form} onSubmit={handleSubmit}>
         <div className={styles.formGroup}>
@@ -99,7 +122,7 @@ export default function Create() {
         </div>
         
         <button type="submit" className={styles.submitButton}>
-          Gem Opskrift
+          {isEditing ? 'Gem Ændringer' : 'Gem Opskrift'}
         </button>
       </form>
     </div>

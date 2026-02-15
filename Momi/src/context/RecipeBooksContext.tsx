@@ -21,6 +21,7 @@ interface RecipeBooksContextType {
   deleteBook: (id: string) => void;
   updateBook: (id: string, data: Partial<RecipeBook>) => void;
   addRecipeToBook: (bookId: string, recipe: Omit<Recipe, 'id' | 'createdAt'>) => void;
+  updateRecipeInBook: (bookId: string, recipeId: string, updates: Partial<Recipe>) => void;
   deleteRecipeFromBook: (bookId: string, recipeId: string) => void;
   addCategoryToBook: (bookId: string, category: string) => boolean;
   importBook: (book: Omit<RecipeBook, 'id' | 'createdAt'>) => void;
@@ -121,6 +122,20 @@ export function RecipeBooksProvider({ children }: { children: ReactNode }) {
     }));
   };
 
+  const updateRecipeInBook = (bookId: string, recipeId: string, updates: Partial<Recipe>) => {
+    setBooks(books.map(book => {
+      if (book.id === bookId) {
+        return {
+          ...book,
+          recipes: book.recipes.map(recipe =>
+            recipe.id === recipeId ? { ...recipe, ...updates } : recipe
+          ),
+        };
+      }
+      return book;
+    }));
+  };
+
   const deleteRecipeFromBook = (bookId: string, recipeId: string) => {
     setBooks(books.map(book => {
       if (book.id === bookId) {
@@ -174,6 +189,7 @@ export function RecipeBooksProvider({ children }: { children: ReactNode }) {
         deleteBook,
         updateBook,
         addRecipeToBook,
+        updateRecipeInBook,
         deleteRecipeFromBook,
         addCategoryToBook,
         importBook,
