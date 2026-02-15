@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { IoPencil, IoCheckmark } from 'react-icons/io5';
+import { IoPencil, IoCheckmark, IoBookSharp } from 'react-icons/io5';
 import { useRecipeBooks } from '../../context/RecipeBooksContext';
 import styles from './BookSwitcher.module.scss';
 
@@ -55,11 +55,17 @@ export default function BookSwitcher() {
         onClick={() => setIsOpen(!isOpen)}
         aria-label="Switch recipe book"
       >
-        <div 
-          className={styles.colorDot} 
-          style={{ backgroundColor: activeBook?.color }}
-        />
-        <span className={styles.bookName}>{activeBook?.name || 'Vælg bog'}</span>
+        {activeBook ? (
+          <>
+            <div 
+              className={styles.colorDot} 
+              style={{ backgroundColor: activeBook.color }}
+            />
+            <span className={styles.bookName}>{activeBook.name}</span>
+          </>
+        ) : (
+          <IoBookSharp />
+        )}
         <span className={styles.arrow}>▼</span>
       </button>
 
