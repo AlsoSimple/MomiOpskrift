@@ -5,3 +5,140 @@
     margin: 0 0 1.5rem 0;
   }
 }
+
+.emptyMessage {
+  color: var(--text-secondary);
+  text-align: center;
+  padding: 2rem 1rem;
+  font-size: 1rem;
+}
+
+.recipeList {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.letterGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.letterHeader {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--border-medium);
+  margin-bottom: 0.5rem;
+}
+
+.recipeCard {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem 1rem;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  transition: border-color 0.2s ease;
+  
+  &:hover {
+    border-color: var(--border-medium);
+  }
+}
+
+.recipeInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.recipeLink {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: var(--text-primary);
+  
+  &:hover h2 {
+    color: var(--primary);
+  }
+  
+  h2 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    transition: color 0.2s ease;
+  }
+}
+
+.recipeActions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.editButton,
+.deleteButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 2rem;
+  padding: 0.5rem;
+  border-radius: 6px;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  
+  &:hover {
+    background-color: var(--bg-tertiary);
+    transform: scale(1.1);
+    color: var(--text-primary);
+  }
+  
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+.deleteButton {
+  &:hover {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+  }
+}
+
+.favoriteButtonActive {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 2rem;
+  padding: 0.5rem;
+  border-radius: 6px;
+  transition: background-color 0.2s ease, transform 0.1s ease, color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ef4444;
+  
+  &:hover {
+    background-color: rgba(239, 68, 68, 0.1);
+    transform: scale(1.1);
+    color: #dc2626;
+  }
+  
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+.category {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}

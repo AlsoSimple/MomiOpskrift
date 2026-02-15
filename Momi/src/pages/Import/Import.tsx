@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { IoBookSharp, IoCloseCircle, IoCheckmark } from 'react-icons/io5';
 import { useRecipeBooks } from '../../context/RecipeBooksContext';
 import type { Recipe } from '../../context/RecipesContext';
 import LZString from 'lz-string';
@@ -86,7 +87,7 @@ export default function Import() {
     return (
       <div className={styles.container}>
         <div className={styles.errorBox}>
-          <h1>❌ Fejl</h1>
+          <h1><IoCloseCircle className={styles.errorIcon} /> Fejl</h1>
           <p>{error}</p>
           <button 
             className={styles.backButton}
@@ -104,7 +105,7 @@ export default function Import() {
   return (
     <div className={styles.container}>
       <div className={styles.importBox}>
-        <h1>📚 Modtag Opskrifter</h1>
+        <h1><IoBookSharp className={styles.bookIcon} /> Modtag Opskrifter</h1>
         
         <div className={styles.bookPreview}>
           <div 
@@ -147,7 +148,7 @@ export default function Import() {
           onClick={handleImport}
           disabled={isImporting}
         >
-          {isImporting ? '✓ Gemmer...' : 'Gem i Mine Bøger'}
+          {isImporting ? <><IoCheckmark /> Gemmer...</> : 'Gem Opskrifter'}
         </button>
 
         <button

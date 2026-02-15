@@ -8,6 +8,7 @@ export interface Recipe {
   link: string;
   kategori: string;
   createdAt: number;
+  isFavorite?: boolean;
 }
 
 interface RecipesContextType {
@@ -16,6 +17,7 @@ interface RecipesContextType {
   addRecipe: (recipe: Omit<Recipe, 'id' | 'createdAt'>) => void;
   updateRecipe: (id: string, updates: Partial<Recipe>) => void;
   deleteRecipe: (id: string) => void;
+  toggleFavorite: (id: string) => void;
 }
 
 const RecipesContext = createContext<RecipesContextType | undefined>(undefined);
@@ -44,8 +46,15 @@ export function RecipesProvider({ children }: { children: ReactNode }) {
     deleteRecipeFromBook(activeBookId, id);
   };
 
+  const toggleFavorite = (id: string) => {
+    const recipe = recipes.find(r => r.id === id);
+    if (recipe) {
+      updateRecipeInBook(activeBookId, id, { isFavorite: !recipe.isFavorite });
+    }
+  };
+
   return (
-    <RecipesContext.Provider value={{ recipes, setRecipes, addRecipe, updateRecipe, deleteRecipe }}>
+    <RecipesContext.Provider value={{ recipes, setRecipes, addRecipe, updateRecipe, deleteRecipe, toggleFavorite }}>
       {children}
     </RecipesContext.Provider>
   );

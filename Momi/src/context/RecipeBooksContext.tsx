@@ -61,18 +61,9 @@ export function RecipeBooksProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  const [books, setBooks] = useLocalStorage<RecipeBook[]>('recipeBooks', [
-    {
-      id: 'default',
-      name: 'Mine Opskrifter',
-      color: '#3b82f6',
-      recipes: [],
-      categories: [],
-      createdAt: Date.now(),
-    }
-  ]);
+  const [books, setBooks] = useLocalStorage<RecipeBook[]>('recipeBooks', []);
   
-  const [activeBookId, setActiveBookId] = useLocalStorage<string>('activeBookId', 'default');
+  const [activeBookId, setActiveBookId] = useLocalStorage<string>('activeBookId', '');
 
   const activeBook = books.find(book => book.id === activeBookId);
 

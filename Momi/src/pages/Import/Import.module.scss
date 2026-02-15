@@ -22,6 +22,10 @@
     font-size: 2rem;
     color: var(--text-primary);
     margin: 0 0 1rem 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
   }
 
   p {
@@ -29,6 +33,11 @@
     margin-bottom: 2rem;
     font-size: 1rem;
   }
+}
+
+.errorIcon {
+  color: #ef4444;
+  font-size: 2.25rem;
 }
 
 .importBox {
@@ -42,7 +51,16 @@
     color: var(--text-primary);
     margin: 0 0 2rem 0;
     text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
   }
+}
+
+.bookIcon {
+  color: var(--text-primary);
+  font-size: 2.25rem;
 }
 
 .bookPreview {
@@ -157,6 +175,10 @@
   cursor: pointer;
   transition: all 0.2s ease;
   margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
 
   &:hover:not(:disabled) {
     background-color: #16a34a;

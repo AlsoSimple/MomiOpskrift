@@ -1,10 +1,10 @@
 import { useNavigate } from 'react-router-dom';
-import { IoPencil, IoTrash } from 'react-icons/io5';
+import { IoPencil, IoTrash, IoHeart, IoHeartOutline } from 'react-icons/io5';
 import { useRecipes } from '../../context/RecipesContext';
 import styles from './Opskrifter.module.scss';
 
 export default function Opskrifter() {
-  const { recipes, deleteRecipe } = useRecipes();
+  const { recipes, deleteRecipe, toggleFavorite } = useRecipes();
   const navigate = useNavigate();
   
   const sortedRecipes = [...recipes].sort((a, b) => 
@@ -38,6 +38,12 @@ export default function Opskrifter() {
     navigate(`/opret/${id}`);
   };
 
+  const handleToggleFavorite = (id: string, e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    toggleFavorite(id);
+  };
+
   return (
     <div className={styles.container}>
       <h1>Opskrifter</h1>
@@ -63,6 +69,13 @@ export default function Opskrifter() {
                     </a>
                   </div>
                   <div className={styles.recipeActions}>
+                    <button 
+                      className={recipe.isFavorite ? styles.favoriteButtonActive : styles.favoriteButton}
+                      onClick={(e) => handleToggleFavorite(recipe.id, e)}
+                      aria-label="Tilføj til favoritter"
+                    >
+                      {recipe.isFavorite ? <IoHeart /> : <IoHeartOutline />}
+                    </button>
                     <button 
                       className={styles.editButton}
                       onClick={(e) => handleEdit(recipe.id, e)}
