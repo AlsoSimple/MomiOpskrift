@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useRecipeBooks } from '../../context/RecipeBooksContext';
+import LZString from 'lz-string';
 import styles from './Share.module.scss';
 
 export default function Share() {
@@ -21,11 +22,11 @@ export default function Share() {
         sharedAt: Date.now(),
       };
 
-      // Encode data as base64 for URL
+      // Compress and encode data for URL
       const jsonString = JSON.stringify(data);
-      const encoded = btoa(encodeURIComponent(jsonString));
+      const compressed = LZString.compressToEncodedURIComponent(jsonString);
       
-      const link = `${window.location.origin}/importer/${encoded}`;
+      const link = `${window.location.origin}/importer/${compressed}`;
       setShareLink(link);
     } catch (error) {
       console.error('Error generating share link:', error);

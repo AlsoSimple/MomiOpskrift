@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useRecipeBooks } from '../../context/RecipeBooksContext';
 import type { Recipe } from '../../context/RecipesContext';
+import LZString from 'lz-string';
 import styles from './Import.module.scss';
 
 interface SharedBookData {
@@ -27,9 +28,10 @@ export default function Import() {
       try {
         if (!shareId) throw new Error('Intet link');
         
-        // Decode base64 data from URL
-        const decoded = decodeURIComponent(atob(shareId));
-        const data: SharedBookData = JSON.parse(decoded);
+        // Decompress data from URL
+        const decompressed = LZString.decompressFromEncodedURIComponent(shareId);
+        if (!decompressed) throw new Error('Kunne ikke dekomprimere data');
+        const data: SharedBookData = JSON.parse(decompressed);
         
         // Validate data structure
         if (!data.name || !Array.isArray(data.recipes) || !Array.isArray(data.categories)) {
