@@ -1,13 +1,16 @@
 import { useState } from 'react';
+import { IoPencil, IoCheckmark } from 'react-icons/io5';
 import { useRecipeBooks } from '../../context/RecipeBooksContext';
 import styles from './BookSwitcher.module.scss';
 
 // Book switcher component
 export default function BookSwitcher() {
-  const { books, activeBookId, activeBook, setActiveBookId, addBook, deleteBook } = useRecipeBooks();
+  const { books, activeBookId, activeBook, setActiveBookId, addBook, deleteBook, updateBook } = useRecipeBooks();
   const [isOpen, setIsOpen] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
   const [newBookName, setNewBookName] = useState('');
+  const [editingBookId, setEditingBookId] = useState<string | null>(null);
+  const [editName, setEditName] = useState('');
 
   const handleCreateBook = () => {
     if (newBookName.trim()) {
@@ -22,6 +25,27 @@ export default function BookSwitcher() {
     if (books.length > 1 && confirm('Er du sikker på at du vil slette denne opskriftsbog?')) {
       deleteBook(id);
     }
+  };
+
+  const handleStartEdit = (id: string, currentName: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setEditingBookId(id);
+    setEditName(currentName);
+  };
+
+  const handleSaveEdit = (id: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (editName.trim()) {
+      updateBook(id, { name: editName.trim() });
+      setEditingBookId(null);
+      setEditName('');
+    }
+  };
+
+  const handleCancelEdit = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setEditingBookId(null);
+    setEditName('');
   };
 
   return (
@@ -56,8 +80,10 @@ export default function BookSwitcher() {
                   <div 
                     className={styles.bookInfo}
                     onClick={() => {
-                      setActiveBookId(book.id);
-                      setIsOpen(false);
+                      if (editingBookId !== book.id) {
+                        setActiveBookId(book.id);
+                        setIsOpen(false);
+                      }
                     }}
                   >
                     <div 
@@ -65,21 +91,65 @@ export default function BookSwitcher() {
                       style={{ backgroundColor: book.color }}
                     />
                     <div className={styles.bookDetails}>
-                      <span className={styles.bookItemName}>{book.name}</span>
-                      <span className={styles.bookStats}>
-                        {book.recipes.length} opskrifter
-                      </span>
+                      {editingBookId === book.id ? (
+                        <input
+                          type="text"
+                          value={editName}
+                          onChange={(e) => setEditName(e.target.value)}
+                          onKeyPress={(e) => e.key === 'Enter' && handleSaveEdit(book.id, e as any)}
+                          onClick={(e) => e.stopPropagation()}
+                          autoFocus
+                          className={styles.editInput}
+                        />
+                      ) : (
+                        <>
+                          <span className={styles.bookItemName}>{book.name}</span>
+                          <span className={styles.bookStats}>
+                            {book.recipes.length} opskrifter
+                          </span>
+                        </>
+                      )}
                     </div>
                   </div>
-                  {books.length > 1 && (
-                    <button
-                      className={styles.deleteButton}
-                      onClick={(e) => handleDeleteBook(book.id, e)}
-                      aria-label="Delete book"
-                    >
-                      ×
-                    </button>
-                  )}
+                  <div className={styles.bookActions}>
+                    {editingBookId === book.id ? (
+                      <>
+                        <button
+                          className={styles.editButton}
+                          onClick={(e) => handleSaveEdit(book.id, e)}
+                          aria-label="Save book name"
+                        >
+                          <IoCheckmark />
+                        </button>
+                        <button
+                          className={styles.deleteButton}
+                          onClick={(e) => handleCancelEdit(e)}
+                          aria-label="Cancel edit"
+                        >
+                          ×
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <button
+                          className={styles.editButton}
+                          onClick={(e) => handleStartEdit(book.id, book.name, e)}
+                          aria-label="Edit book name"
+                        >
+                          <IoPencil />
+                        </button>
+                        {books.length > 1 && (
+                          <button
+                            className={styles.deleteButton}
+                            onClick={(e) => handleDeleteBook(book.id, e)}
+                            aria-label="Delete book"
+                          >
+                            ×
+                          </button>
+                        )}
+                      </>
+                    )}
+                  </div>
                 </div>
               ))}
             </div>
