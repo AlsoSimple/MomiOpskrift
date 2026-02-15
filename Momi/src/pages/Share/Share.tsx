@@ -8,7 +8,7 @@ export default function Share() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const generateShareLink = async () => {
+  const generateShareLink = () => {
     if (!activeBook) return;
     
     setIsGenerating(true);
@@ -21,18 +21,11 @@ export default function Share() {
         sharedAt: Date.now(),
       };
 
-      const response = await fetch('https://jsonbin.io/b', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
-
-      const result = await response.json();
-      const binId = result.id || result.uri?.split('/').pop();
+      // Encode data as base64 for URL
+      const jsonString = JSON.stringify(data);
+      const encoded = btoa(encodeURIComponent(jsonString));
       
-      const link = `${window.location.origin}/importer/${binId}`;
+      const link = `${window.location.origin}/importer/${encoded}`;
       setShareLink(link);
     } catch (error) {
       console.error('Error generating share link:', error);

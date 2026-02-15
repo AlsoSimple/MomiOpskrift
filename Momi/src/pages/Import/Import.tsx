@@ -23,22 +23,33 @@ export default function Import() {
   const [isImporting, setIsImporting] = useState(false);
 
   useEffect(() => {
-    const fetchSharedData = async () => {
+    const decodeSharedData = () => {
       try {
-        const response = await fetch(`https://jsonbin.io/b/${shareId}`);
-        if (!response.ok) throw new Error('Link ikke fundet');
+        if (!shareId) throw new Error('Intet link');
         
-        const data = await response.json();
+        // Decode base64 data from URL
+        const decoded = decodeURIComponent(atob(shareId));
+        const data: SharedBookData = JSON.parse(decoded);
+        
+        // Validate data structure
+        if (!data.name || !Array.isArray(data.recipes) || !Array.isArray(data.categories)) {
+          throw new Error('Ugyldigt data');
+        }
+        
         setSharedData(data);
       } catch (err) {
-        setError('Kunne ikke hente opskriftsbog. Linket er muligvis udløbet.');
+        console.error('Decode error:', err);
+        setError('Kunne ikke læse opskriftsbog. Linket er muligvis beskadiget.');
       } finally {
         setIsLoading(false);
       }
     };
 
     if (shareId) {
-      fetchSharedData();
+      decodeSharedData();
+    } else {
+      setError('Intet delingslink fundet.');
+      setIsLoading(false);
     }
   }, [shareId]);
 
